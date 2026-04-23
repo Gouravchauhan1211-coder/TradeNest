@@ -17,10 +17,11 @@ export default async function AdminCourses() {
           <h1 className="text-3xl font-black tracking-tight uppercase mb-2">Course Management</h1>
           <p className="text-muted-foreground">Add, edit, or remove courses from the marketplace.</p>
         </div>
-        <button className="btn-primary flex items-center gap-2">
+        <Link href="/admin/courses/new" className="btn-primary flex items-center gap-2">
           <Plus size={20} />
           Add New Course
-        </button>
+        </Link>
+
       </div>
 
       <div className="glass rounded-[2.5rem] overflow-hidden">

@@ -1,4 +1,4 @@
-import { CheckCircle2, Zap, Star, Shield, ArrowRight, Sparkles, Trophy, Crown } from 'lucide-react';
+import { CheckCircle2, Zap, Star, Shield, ArrowRight, Sparkles, Trophy, Crown, Download } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MembershipPage() {

@@ -36,8 +36,14 @@ export async function getCourses(options?: {
     return [];
   }
 
-  return data;
+  return data.map((course: any) => ({
+    ...course,
+    originalPrice: course.original_price,
+    salePrice: course.sale_price,
+    discountPercentage: course.discount_percentage,
+  }));
 }
+
 
 export async function getCourseById(id: string) {
   const supabase = await createClient();
@@ -52,5 +58,11 @@ export async function getCourseById(id: string) {
     return null;
   }
 
-  return data;
+  return {
+    ...data,
+    originalPrice: data.original_price,
+    salePrice: data.sale_price,
+    discountPercentage: data.discount_percentage,
+  };
 }
+

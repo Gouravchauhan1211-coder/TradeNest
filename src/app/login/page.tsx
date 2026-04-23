@@ -3,13 +3,12 @@
 import Link from 'next/link';
 import { Mail, Lock, ArrowRight } from 'lucide-react';
 import { useState, Suspense } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase-browser';
 import { useSearchParams, useRouter } from 'next/navigation';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = createClient();
+
+
 
 function LoginForm() {
   const [email, setEmail] = useState('');

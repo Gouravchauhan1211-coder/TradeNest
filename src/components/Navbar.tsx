@@ -1,33 +1,63 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, User, Search, Menu, X, LogOut, LayoutDashboard, Download } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, LogOut, LayoutDashboard, Download, Trophy } from 'lucide-react';
+
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/lib/cart-store';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase-browser';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = createClient();
+
+
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [role, setRole] = useState<string | null>(null);
   const cartItems = useCartStore(state => state.items);
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => setUser(user));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        setRole(profile?.role || 'user');
+      }
+    };
+
+    fetchUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      
+      if (currentUser) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', currentUser.id)
+          .single();
+        setRole(profile?.role || 'user');
+      } else {
+        setRole(null);
+      }
     });
+
     return () => subscription.unsubscribe();
   }, []);
+
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -82,10 +112,17 @@ const Navbar = () => {
 
                 {showUserMenu && (
                   <div className="absolute right-0 mt-2 w-52 glass rounded-2xl shadow-2xl border border-border p-2 z-50">
+                    {role === 'admin' && (
+                      <Link href="/admin" onClick={() => setShowUserMenu(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 text-sm font-bold transition-colors mb-1">
+                        <Trophy size={16} /> Admin Panel
+                      </Link>
+                    )}
                     <Link href="/account" onClick={() => setShowUserMenu(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted text-sm font-semibold transition-colors">
                       <LayoutDashboard size={16} /> My Account
                     </Link>
+
                     <Link href="/account/downloads" onClick={() => setShowUserMenu(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-muted text-sm font-semibold transition-colors">
                       <Download size={16} /> Downloads
@@ -140,10 +177,17 @@ const Navbar = () => {
           <div className="pt-4 border-t border-border space-y-2">
             {user ? (
               <>
+                {role === 'admin' && (
+                  <Link href="/admin" onClick={() => setIsOpen(false)}
+                    className="block px-4 py-3 rounded-xl text-base font-black text-primary bg-primary/5 mb-2">
+                    Admin Panel
+                  </Link>
+                )}
                 <Link href="/account" onClick={() => setIsOpen(false)}
                   className="block px-4 py-3 rounded-xl text-base font-bold text-primary">
                   My Account
                 </Link>
+
                 <button onClick={() => { handleSignOut(); setIsOpen(false); }}
                   className="w-full text-left px-4 py-3 rounded-xl text-base font-bold text-destructive">
                   Sign Out

@@ -54,20 +54,26 @@ const ProductCard = ({
           src={thumbnail1}
           alt={title}
           fill
+          unoptimized
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           className={cn(
             "object-cover transition-all duration-700 ease-in-out group-hover:scale-110",
             isHovered && thumbnail2 ? "opacity-0" : "opacity-100"
           )}
+
+
         />
         {thumbnail2 && (
           <Image
             src={thumbnail2}
             alt={title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             className={cn(
               "object-cover transition-all duration-700 ease-in-out group-hover:scale-110",
               isHovered ? "opacity-100" : "opacity-0"
             )}
+
           />
         )}
         
