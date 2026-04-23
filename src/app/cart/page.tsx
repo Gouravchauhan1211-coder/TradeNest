@@ -137,6 +137,18 @@ export default function CartPage() {
               <ShieldCheck size={14} />
               128-bit SSL Encrypted
             </div>
+            <div className="bg-black text-white p-8 rounded-3xl space-y-4">
+              <div className="flex items-center gap-2">
+                <Zap size={20} className="text-primary fill-primary" />
+                <h3 className="font-black uppercase tracking-tight">Lifetime Access</h3>
+              </div>
+              <p className="text-xs text-white/70 leading-relaxed">
+                Get this course and **500+ others** forever for just one payment of **$99**.
+              </p>
+              <Link href="/membership" className="btn-primary w-full text-center py-3 text-sm block">
+                Upgrade Now
+              </Link>
+            </div>
           </div>
         </div>
       </div>

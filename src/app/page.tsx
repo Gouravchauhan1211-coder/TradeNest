@@ -2,55 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Zap, Shield, Download, Star } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
+import { getCourses } from '@/lib/courses';
 
-const DUMMY_COURSES = [
-  {
-    id: '1',
-    title: 'Advanced SMC Trading Course - Institutional Concepts',
-    category: 'Smart Money',
-    originalPrice: 499,
-    salePrice: 19.99,
-    discount: 96,
-    thumbnail1: 'https://images.unsplash.com/photo-1611974717482-480ce9745841?q=80&w=800&auto=format&fit=crop',
-    thumbnail2: 'https://images.unsplash.com/photo-1642388691919-63e803000b9a?q=80&w=800&auto=format&fit=crop',
-    rating: 5.0
-  },
-  {
-    id: '2',
-    title: 'Forex Masterclass: From Zero to Pro Trader',
-    category: 'Forex',
-    originalPrice: 999,
-    salePrice: 29.99,
-    discount: 97,
-    thumbnail1: 'https://images.unsplash.com/photo-1611974717482-480ce9745841?q=80&w=800&auto=format&fit=crop',
-    thumbnail2: 'https://images.unsplash.com/photo-1640341719942-0f044949826c?q=80&w=800&auto=format&fit=crop',
-    rating: 4.9
-  },
-  {
-    id: '3',
-    title: 'The Ultimate ICT Mentorship 2024 Core Content',
-    category: 'Hot',
-    originalPrice: 2500,
-    salePrice: 49.99,
-    discount: 98,
-    thumbnail1: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=800&auto=format&fit=crop',
-    thumbnail2: 'https://images.unsplash.com/photo-1611974717482-480ce9745841?q=80&w=800&auto=format&fit=crop',
-    rating: 5.0
-  },
-  {
-    id: '4',
-    title: 'Business Scalability: Systematize Your Agency',
-    category: 'Business',
-    originalPrice: 1500,
-    salePrice: 39.99,
-    discount: 97,
-    thumbnail1: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
-    thumbnail2: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=800&auto=format&fit=crop',
-    rating: 4.8
-  }
-];
+export default async function Home() {
+  const latestCourses = await getCourses({ limit: 4 });
 
-export default function Home() {
   return (
     <div className="space-y-24 pb-20">
       {/* Hero Section */}
@@ -132,9 +88,14 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {DUMMY_COURSES.map((course) => (
+          {latestCourses.map((course) => (
             <ProductCard key={course.id} {...course} />
           ))}
+          {latestCourses.length === 0 && (
+            <div className="col-span-full py-20 text-center glass rounded-3xl">
+              <p className="text-muted-foreground italic">New courses arriving soon. Check back later!</p>
+            </div>
+          )}
         </div>
       </section>
 
