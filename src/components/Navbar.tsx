@@ -62,9 +62,11 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setShowUserMenu(false);
+    setRole(null);
     router.push('/');
     router.refresh();
   };
+
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border">

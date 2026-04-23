@@ -1,4 +1,5 @@
 -- Supabase Schema for TradeNest Marketplace
+-- Consolidated Version (2026-04-23)
 
 -- Enable UUID extension
 create extension if not exists "uuid-ossp";
@@ -117,6 +118,12 @@ alter table public.course_requests enable row level security;
 alter table public.support_tickets enable row level security;
 alter table public.download_logs enable row level security;
 
+-- --- PERMISSIONS (FIX) ---
+-- Ensure 'anon' and 'authenticated' roles have access to common tables
+grant select on public.courses to anon;
+grant select on public.courses to authenticated;
+grant select on public.profiles to authenticated;
+
 -- Policies
 create policy "Users can view own profile" on public.profiles for select using (auth.uid() = id);
 create policy "Users can update own profile" on public.profiles for update using (auth.uid() = id);
@@ -184,3 +191,14 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- --- SEED DATA (OPTIONAL) ---
+-- Uncomment or run manually if needed for initial setup
+/*
+INSERT INTO public.courses (title, description, category, original_price, sale_price, thumbnail1, is_featured, is_active)
+VALUES 
+('Advanced SMC Forex Masterclass', 'Master the Smart Money Concepts with this institutional trading course.', 'Forex', 1999, 19.99, 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=800&q=80', true, true),
+('ICT Mentorship 2024 (Private Content)', 'Exclusive access to the latest institutional trading mentorship.', 'Trading', 2500, 25.00, 'https://images.unsplash.com/photo-1535320485706-44d43b919500?w=800&q=80', true, true),
+('E-Commerce Empire: 0 to $100k', 'Build a successful dropshipping and brand building business.', 'Business', 997, 9.97, 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80', false, true),
+('Crypto Scalping Pro', 'Fast-paced crypto trading strategies for daily profits.', 'Hot', 1499, 14.99, 'https://images.unsplash.com/photo-1639728733761-adc942d32702?w=800&q=80', true, true);
+*/
