@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/lib/cart-store';
 import { createClient } from '@/lib/supabase-browser';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+import type { User as SupabaseUser, AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
 const supabase = createClient();
@@ -39,7 +39,7 @@ const Navbar = () => {
 
     fetchUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event: AuthChangeEvent, session: Session | null) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       

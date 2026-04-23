@@ -3,7 +3,7 @@
 import { useCartStore } from '@/lib/cart-store';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trash2, ShoppingCart, ArrowRight, ShieldCheck, Lock } from 'lucide-react';
+import { Trash2, ShoppingCart, ArrowRight, ShieldCheck, Lock, Zap } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
